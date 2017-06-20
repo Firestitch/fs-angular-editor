@@ -1,0 +1,17 @@
+{
+    "name": "fs-angular-editor",
+    "description": "",
+    "main": [
+        "dist/editor.js",
+        "dist/editor.css"
+    ],
+    "authors": [
+        "Firestitch Inc."
+    ],
+    "license": "MIT",
+    "ignore": [
+        "src",
+        ".gitignore"
+    ],
+    "private": false
+}
