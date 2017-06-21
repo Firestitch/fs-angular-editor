@@ -2,7 +2,6 @@ $.Redactor.prototype.autocomplete = function()
 {
     var autocomplete = null;
     var self = null;
-    var type = null;
 
     return {
 
@@ -11,7 +10,6 @@ $.Redactor.prototype.autocomplete = function()
                 autocomplete.container.remove();
                 autocomplete = null;
                 this.$editor.focus();
-                type = null;
                 this.code.sync();
             }
         },
@@ -30,26 +28,36 @@ $.Redactor.prototype.autocomplete = function()
 
             if(selected.length) {
 
-                if(type) {
+                var el = angular.element(this.opts.autocomplete.insert(selected.data('data')))[0];
+                if(el) {
+                	this.selection.restore();
+	                this.autocomplete.insertTextAtCursor(el);
+	            }
 
-                    var el = this.opts.autocomplete.insert(type, selected.data('data'));
-                    var text = document.createTextNode('\u00A0');
-
-                    if(autocomplete.split.nextSibling) {
-                    	autocomplete.current.parentElement.insertBefore(el[0],autocomplete.split);
-                    	autocomplete.current.parentElement.insertBefore(text,autocomplete.split);
-                   	} else {
-                    	autocomplete.current.append(el[0]);
-                    	autocomplete.current.append(text);
-                    }
-
-                    this.autocomplete.remove();
-                } else {
-                    type = selected.data('type');
-                    this.autocomplete.inputSearch('');
-                }
+	            this.caret.after(el);
+	            this.selection.get().extentNode.nodeValue = '\u00A0' + this.selection.get().extentNode.nodeValue;
+	            this.autocomplete.remove();
             }
         },
+
+		setCaret: function(target, isStart) {
+			var range = document.createRange();
+			var sel = window.getSelection();
+			if (isStart){
+				var newText = document.createTextNode('');
+				target.appendChild(newText);
+				range.setStart(target.childNodes[0], 0);
+			} else {
+				range.selectNodeContents(target);
+			}
+
+			range.collapse(isStart);
+			sel.removeAllRanges();
+			sel.addRange(range);
+
+			$(target).focus();
+			$(target).select();
+		},
 
         resultClear: function() {
             autocomplete.results.empty();
@@ -65,67 +73,50 @@ $.Redactor.prototype.autocomplete = function()
 
         inputSearch: function(value) {
 
-            if(type) {
-
-                this.opts.autocomplete.data({ type: type, keyword: value })
-                .then($.proxy(function(items) {
-                    this.autocomplete.resultClear();
-
-                    if(!items.length) {
-                        autocomplete.results.append(angular.element('<div>')
-                                                        .addClass('result')
-                                                        .append('No Results'));
-                    }
-
-                    angular.forEach(items,$.proxy(function(item,index) {
-
-                        var selected = index===0 ? 'selected' : '';
-                        var div = angular.element('<div>')
-                                    .addClass('result ' + selected)
-                                    .attr('layout','row')
-                                    .data('data',item.data)
-                                    .append(item.template)
-                                    .on('click',function(e) {
-                                        self.itemSelect();
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                    })
-                                    .on('mouseenter',function(e) {
-                                        self.itemSetSelected(angular.element(this));
-                                    });
-
-						autocomplete.results.append(div);
-                    },this));
-
-                },this));
-
-            } else {
-
+            this.opts.autocomplete.data({ keyword: value })
+            .then($.proxy(function(items) {
                 this.autocomplete.resultClear();
 
-                angular.forEach(this.opts.autocomplete.types,function(type,index) {
+                if(!items.length) {
                     autocomplete.results.append(angular.element('<div>')
-                                                        .addClass('result' + (index ? '' : ' selected'))
-                                                        .data('type',type.value)
-                                                        .append(type.name)
-                                                        .on('click',function(e) {
-                                                            self.itemSelect();
-                                                            self.preventBlur = true;
-                                                            e.preventDefault();
-                                                            e.stopPropagation();
-                                                        })
-                                                        .on('mouseover',function(e) {
-                                                            var el = angular.element(this);
-                                                            angular.forEach(el.parent().children(),function(item) {
-                                                                angular.element(item).removeClass('selected');
-                                                            });
-                                                            el.addClass('selected');
-                                                        }));
+                                                    .addClass('result')
+                                                    .append('No Results'));
+                }
 
-                });
-            }
+                angular.forEach(items,$.proxy(function(item,index) {
 
+                    var selected = index===0 ? 'selected' : '';
+                    var div = angular.element('<div>')
+                                .addClass('result ' + selected)
+                                .attr('layout','row')
+                                .data('data',item)
+                                .append(item.template)
+                                .on('click',function(e) {
+                                    self.itemSelect();
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                })
+                                .on('mouseenter',function(e) {
+                                    self.itemSetSelected(angular.element(this));
+                                });
+
+					autocomplete.results.append(div);
+                },this));
+
+            },this));
         },
+
+		insertTextAtCursor: function(node) {
+		    var sel, range, html;
+		    if (window.getSelection) {
+		        sel = window.getSelection();
+		        if (sel.getRangeAt && sel.rangeCount) {
+		            range = sel.getRangeAt(0);
+		            range.deleteContents();
+		            range.insertNode(node);
+		        }
+		    }
+		},
 
         init: function() {
 
@@ -135,28 +126,27 @@ $.Redactor.prototype.autocomplete = function()
 
             this.$editor.on('keydown.redactor-plugin-autocomplete', $.proxy(function(e) {
 
-                var editor = this;
-                var selection = this.selection;
                 var current = this.selection.current();
 
                 if(current) {
-/*
-	               	if(current.nodeName!='#text') {
-    	            	current = current.lastChild;
-	                }*/
+
+					var range = this.selection.range(this.selection.get());
+
 
                     if(e.keyCode==32 && e.ctrlKey) { //space
 
-                        e.stopPropagation();
-                        e.preventDefault();
+                        var sel = this.selection.get();
+                        sel.baseNode.nextSibling.nodeValue = sel.baseNode.nextSibling.nodeValue.replace(/^\s/,'');
+                        this.selection.save();
 
                         var input = angular.element('<input/>')
+                        				.attr('placeholder','Commands: user, task, spec, page')
                                         .on('blur',function(e) {
                                             setTimeout(function() {
                                                 if(!self.preventBlur) {
                                                     self.remove();
                                                 }
-                                            },100);
+                                            },200);
                                         })
                                         .on('keyup',$.proxy(function(e) {
                                             e.stopPropagation();
@@ -195,35 +185,23 @@ $.Redactor.prototype.autocomplete = function()
 
                                             } else {
 
-                                                if(type) {
 
-                                                    if(e.keyCode==13 || e.keyCode==9) { //enter, tab
-                                                        this.autocomplete.itemSelect();
-                                                        e.preventDefault();
-
-                                                    } else {
-                                                        this.autocomplete.inputSearch(value);
-                                                        this.autocomplete.inputWidth(String.fromCharCode(e.keyCode));
-                                                    }
+                                                if(e.keyCode==13 || e.keyCode==9) { //enter, tab
+                                                    this.autocomplete.itemSelect();
+                                                    e.preventDefault();
 
                                                 } else {
-
-                                                    angular.forEach(autocomplete.results.find('div'),$.proxy(function(item) {
-                                                        item = angular.element(item);
-                                                        if(item.data('type').indexOf(e.key)===0) {
-                                                            this.autocomplete.itemSetSelected(item);
-                                                        }
-                                                    },this));
-
-                                                    e.preventDefault();
-                                                    this.autocomplete.itemSelect();
+                                                    this.autocomplete.inputSearch(value);
+                                                    this.autocomplete.inputWidth(String.fromCharCode(e.keyCode));
                                                 }
+
+
                                             }
                                             e.stopPropagation();
                                         },this));
 
                         var autoWidth = angular.element('<span>').addClass('autocomplete-width');
-                        var results = angular.element('<span class="results md-whiteframe-z2"></span>');
+                        var results = angular.element('<span class="results"></span>');
                         var elw = angular.element('<div>')
                                         .addClass('editor-autocomplete-wrap')
                                         .append('<span class="bumper"></span>')
@@ -236,33 +214,16 @@ $.Redactor.prototype.autocomplete = function()
                                                     .addClass('editor-autocomplete')
                                                     .append(elw);
 
-                        var split = current.splitText ? current.splitText(0) : current;
+                        this.autocomplete.insertTextAtCursor(container[0]);
+                        input[0].focus();
+                       	this.autocomplete.inputSearch('');
 
-                        autocomplete = {    current: current,
-                                            container: container,
+                        autocomplete = {    container: container,
                                             results: results,
-                                            split: split,
                                             input: input,
                                             autoWidth: autoWidth };
-
-                       	if(split.nodeValue) {
-                       		split.nodeValue = split.nodeValue.replace(/\s$/,'');
-                       	}
-
-                        setTimeout($.proxy(function() {
-                            if(split.nextSibling) {
-                            	current.parentElement.insertBefore(container[0],split.nextSibling);
-                            } else {
-                            	current.appendChild(container[0]);
-                            }
-
-                            input[0].focus();
-
-                            this.autocomplete.inputSearch('');
-                        },this),100);
                     }
                 }
-
 
             },this));
         }
