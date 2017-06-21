@@ -2,13 +2,13 @@
     'use strict';
 
     angular.module('fs-angular-editor',[])
-    .directive('fsEditor', function($timeout) {
+    .directive('fsEditor', function(fsEditor) {
         return {
-            template: '<textarea fs-redactor fs-options="redactorOptions" fs-instance="redactorInstance"></textarea>',
+            template: '<textarea ng-model="model"></textarea>',
             restrict: 'E',
             transclude: true,
             scope: {
-               model: "=fsModel",
+               	model: "=fsModel",
 	            options: '=?fsOptions',
 	            instance: '=?fsInstance',
 	            meta: '=?fsMeta'
@@ -18,28 +18,38 @@
             	var instance = {
             		element: angular.element(element[0].querySelector('textarea')),
             		editor: null,
-            		content: ''
+            		content: $scope.model
             	},
             	fixedToolbarInterval;
 
+            	if($scope.instance) {
+            		angular.extend($scope.instance,instance);
+            	}
+
             	$scope.options = $scope.options || {};
 
-                var options = angular.extend({},$scope.options,{
+                var options = angular.extend({},fsEditor.options(),$scope.options,{
                 	callbacks: {
-	                    //keydown: $scope.options.callbacks.keydown,
-	                    change: change,
+	                    change: function() {
+			            	$scope.$apply(function() {
+			            		$scope.model = instance.editor.code.get();
+			            		instance.content = $scope.model;
+
+					            if($scope.options.callbacks.change) {
+				                    $scope.options.callbacks.change($scope.model,
+				                    	{   options: $scope.options,
+				                            element: element,
+				                            meta: $scope.meta });
+					        	}
+			            	});
+			            },
 	                    imageUpload: function(img,response) {
 	                        angular.element(img).attr('src',response.data.url);
 	                        img.replaceWith(angular.element('<p>').append(img.clone()));
-	                        change();
 	                    }
 	                },
-	                toolbarOverflow: true,
-	                //imageUpload: CONFIG.api.url + 'image',
-	                //imageUploadForms: '#redactor-form',
-	                //plugins: $scope.options.plugins
+	                toolbarOverflow: true
 	            });
-
 
                 try {
                     instance.element.redactor('core.destroy');
@@ -47,6 +57,12 @@
 
                 instance.element.redactor(options);
                 instance.editor = instance.element.redactor('core.object');
+                instance.editor.code.set($scope.model,{ start: true });
+
+                instance.editor.upload.send = angular.bind(instance.editor,function(send, formData, e) {
+                	fsEditor.trigger('uploadBeforeSend',[formData, e]);
+                	send(formData,e);
+                },instance.editor.upload.send);
 
                 $scope.$watch('model',function(value,ovalue) {
                 	if(value!=instance.content) {
@@ -56,7 +72,7 @@
 
 	            $scope.$on('$destroy',function() {
 	            	element.off('remove');
-	                element.redactor('core.destroy');
+	            	instance.editor.core.destroy();
 
 		        	if($scope.options.scrollTarget) {
 		            	$($scope.options.scrollTarget).off('scroll');
@@ -64,30 +80,6 @@
 
 		        	clearInterval(fixedToolbarInterval);
 	            });
-
-	            function change() {
-	            	$scope.$apply(function() {
-	            		$scope.model = instance.editor.code.get();
-	            		instance.content = $scope.model;
-	            	});
-
-	            	//$timeout(function() {
-
-
-	/*
-			            if($scope.options.callbacks.change) {
-		                    var event = {   options: $scope.options,
-		                                    element: element,
-		                                    meta: $scope.meta };
-		                    $scope.options.callbacks.change(value, event);
-			        	}*/
-
-
-		        		//ngModel.$setViewValue(value);
-		        	//},100);
-	            }
-
-
 
                 if(instance.editor.opts.toolbarFixedTarget !== document) {
 
@@ -103,13 +95,6 @@
                 		fixedToolbarInterval = setInterval(fixedToolbar,1000);
                 	}
                 }
-
-
-                //Let redactor register the toolbar offset code and then overlay our hack
-                //setTimeout(function() {
-                	//$scope.options.instance.init();
-	            //},700);
-
             }
         };
     });

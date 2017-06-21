@@ -1,42 +1,39 @@
 $.Redactor.prototype.autocomplete = function()
 {
-    var autocomplete = null;
     var self = null;
 
     return {
 
         remove: function() {
-            if(autocomplete) {
-                autocomplete.container.remove();
-                autocomplete = null;
-                this.$editor.focus();
-                this.code.sync();
-            }
+            self.container.remove();
+            this.$editor.focus();
+            this.code.sync();
         },
 
         inputWidth: function(char) {
-            var val = autocomplete.input.val().concat(char).replace(/[\s]/,'');
+            var val = self.input.val().concat(char).replace(/[\s]/,'');
 
-            var span = autocomplete.autoWidth.text(val);
+            var span = self.autoWidth.text(val);
 
-            autocomplete.input.css('width',span[0].offsetWidth + 15);
+            self.input.css('width',span[0].offsetWidth + 15);
         },
 
         itemSelect: function() {
 
-            var selected = angular.element(autocomplete.results[0].querySelector('.result.selected'));
+            var selected = angular.element(self.results[0].querySelector('.result.selected'));
 
             if(selected.length) {
 
-                var el = angular.element(this.opts.autocomplete.insert(selected.data('data')))[0];
+            	var data = selected.data('data').data;
+                var el = angular.element(this.opts.autocomplete.insert(data))[0];
                 if(el) {
                 	this.selection.restore();
-	                this.autocomplete.insertTextAtCursor(el);
+	                self.insertTextAtCursor(el);
 	            }
 
 	            this.caret.after(el);
 	            this.selection.get().extentNode.nodeValue = '\u00A0' + this.selection.get().extentNode.nodeValue;
-	            this.autocomplete.remove();
+	            self.remove();
             }
         },
 
@@ -60,11 +57,11 @@ $.Redactor.prototype.autocomplete = function()
 		},
 
         resultClear: function() {
-            autocomplete.results.empty();
+            self.results.empty();
         },
 
         itemSetSelected: function(item) {
-            angular.element(autocomplete.results[0].querySelector('.result.selected')).removeClass('selected');
+            angular.element(self.results[0].querySelector('.result.selected')).removeClass('selected');
 
             if(item) {
                 angular.element(item).addClass('selected');
@@ -73,12 +70,12 @@ $.Redactor.prototype.autocomplete = function()
 
         inputSearch: function(value) {
 
-            this.opts.autocomplete.data({ keyword: value })
+            this.opts.autocomplete.data(value)
             .then($.proxy(function(items) {
-                this.autocomplete.resultClear();
+                self.resultClear();
 
                 if(!items.length) {
-                    autocomplete.results.append(angular.element('<div>')
+                    self.results.append(angular.element('<div>')
                                                     .addClass('result')
                                                     .append('No Results'));
                 }
@@ -100,7 +97,7 @@ $.Redactor.prototype.autocomplete = function()
                                     self.itemSetSelected(angular.element(this));
                                 });
 
-					autocomplete.results.append(div);
+					self.results.append(div);
                 },this));
 
             },this));
@@ -118,6 +115,20 @@ $.Redactor.prototype.autocomplete = function()
 		    }
 		},
 
+		debounce: function(func, wait, immediate) {
+			var timeout;
+			return function() {
+				var context = this, args = arguments;
+				var later = function() {
+					timeout = null;
+					if (!immediate) func.apply(context, args);
+				};
+				var callNow = immediate && !timeout;
+				clearTimeout(timeout);
+				timeout = setTimeout(later, wait);
+				if (callNow) func.apply(context, args);
+			};
+		},
         init: function() {
 
             self = this.autocomplete;
@@ -133,72 +144,78 @@ $.Redactor.prototype.autocomplete = function()
 					var range = this.selection.range(this.selection.get());
 
 
-                    if(e.keyCode==32 && e.ctrlKey) { //space
+                    if(e.keyCode==32 && e.ctrlKey) { //space + Ctrl
 
                         var sel = this.selection.get();
-                        sel.baseNode.nextSibling.nodeValue = sel.baseNode.nextSibling.nodeValue.replace(/^\s/,'');
+                        //sel.baseNode.nextSibling.nodeValue = sel.baseNode.nextSibling.nodeValue.replace(/^\s/,'');
                         this.selection.save();
 
+                        var keydownDebounce = self.debounce(function(e,value) {
+                        	self.inputSearch(value);
+		                    self.inputWidth(String.fromCharCode(e.keyCode));
+		                },300);
+
                         var input = angular.element('<input/>')
-                        				.attr('placeholder','Commands: user, task, spec, page')
+                        				.attr('placeholder',this.opts.autocomplete.placeholder)
                                         .on('blur',function(e) {
                                             setTimeout(function() {
                                                 if(!self.preventBlur) {
-                                                    self.remove();
+                                                   	self.remove();
                                                 }
                                             },200);
                                         })
                                         .on('keyup',$.proxy(function(e) {
                                             e.stopPropagation();
                                         },this))
-                                        .on('keydown',$.proxy(function(e) {
-                                            self.preventBlur = false;
-                                            var value = autocomplete.input.val();
+                                        .on('keydown',function(e) {
 
-                                            if(e.keyCode==8)
-                                                value = value.slice(0,-1)
-                                            else
-                                                value += e.key;
+                                        	var immediate = e.keyCode==8 || e.keyCode==38 || e.keyCode==40;
 
-                                            if(e.keyCode==38 || e.keyCode==40) { //up,down
+									        self.preventBlur = false;
 
-                                                var selected = angular.element(autocomplete.results[0].querySelector('.result.selected'));
+									        var value = self.input.val();
 
-                                                if(selected.length) {
+									        if(e.keyCode==8) //backspace
+									            value = value.slice(0,-1);
+									        else
+									        	value += e.key;
 
-                                                    if(e.keyCode==38) {
-                                                        if(selected[0].previousSibling) {
-                                                            this.autocomplete.itemSetSelected(selected[0].previousSibling);
-                                                        }
-                                                    } else if(e.keyCode==40) {
-                                                        if(selected[0].nextSibling) {
-                                                            this.autocomplete.itemSetSelected(selected[0].nextSibling);
-                                                        }
-                                                    }
-                                                }
+									        if(e.keyCode==38 || e.keyCode==40) { //up,down
 
-                                                e.preventDefault();
+									            var selected = angular.element(self.results[0].querySelector('.result.selected'));
 
-                                            } else if((!input.val().length && e.keyCode==8) || e.keyCode==27) { //backspace, escape
-                                                this.autocomplete.remove();
-                                                e.preventDefault();
+									            if(selected.length) {
 
-                                            } else {
+									                if(e.keyCode==38) {
+									                    if(selected[0].previousSibling) {
+									                        self.itemSetSelected(selected[0].previousSibling);
+									                    }
+									                } else if(e.keyCode==40) {
+									                    if(selected[0].nextSibling) {
+									                        self.itemSetSelected(selected[0].nextSibling);
+									                    }
+									                }
+									            }
 
+									            e.preventDefault();
 
-                                                if(e.keyCode==13 || e.keyCode==9) { //enter, tab
-                                                    this.autocomplete.itemSelect();
-                                                    e.preventDefault();
+									        } else if((!self.input.val().length && e.keyCode==8) || e.keyCode==27) { //backspace, escape
+									            self.remove();
+									            e.preventDefault();
 
-                                                } else {
-                                                    this.autocomplete.inputSearch(value);
-                                                    this.autocomplete.inputWidth(String.fromCharCode(e.keyCode));
-                                                }
+									        } else {
 
+									            if(e.keyCode==13 || e.keyCode==9) { //enter, tab
+									                self.itemSelect();
+									                e.preventDefault();
 
-                                            }
-                                            e.stopPropagation();
-                                        },this));
+									            } else {
+									            	keydownDebounce(e,value);
+									            }
+
+									        }
+									        e.stopPropagation();
+                                        });
 
                         var autoWidth = angular.element('<span>').addClass('autocomplete-width');
                         var results = angular.element('<span class="results"></span>');
@@ -214,14 +231,14 @@ $.Redactor.prototype.autocomplete = function()
                                                     .addClass('editor-autocomplete')
                                                     .append(elw);
 
-                        this.autocomplete.insertTextAtCursor(container[0]);
-                        input[0].focus();
-                       	this.autocomplete.inputSearch('');
+                        self.insertTextAtCursor(container[0]);
+                        self.container = container;
+                        self.results = results;
+                        self.autoWidth = autoWidth;
+                        self.input = input;
 
-                        autocomplete = {    container: container,
-                                            results: results,
-                                            input: input,
-                                            autoWidth: autoWidth };
+                        input[0].focus();
+                       	self.inputSearch('');
                     }
                 }
 

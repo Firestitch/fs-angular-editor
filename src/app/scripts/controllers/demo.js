@@ -10,20 +10,16 @@
         data: function(query) {
         	return $q(function(resolve) {
 
-        		if(!query) {
-        			return resolve([]);
-        		}
-
-        		resolve([{ template: 'Ray Tom', user: { id: 1, name: 'Ray Tom' } },
-        					{ template: 'Bob Smith', user: { id: 2, name: 'Bob Smith' }},
-        					{ template: 'Long John Silver Silver Silver Silver Silver', user: { id: 2, name: 'Long Silver' }} ]);
+        		resolve([{ template: 'Ray Tom', data: { id: 1, name: 'Ray Tom' } },
+        					{ template: 'Bob Smith', data: { id: 2, name: 'Bob Smith' }},
+        					{ template: 'Long John Silver Silver Silver Silver Silver', data: { id: 2, name: 'Long Silver' }} ]);
         	});
         },
         insert: function(item) {
             return angular.element('<inline-user>')
-                            .attr('data-uid',item.user.id)
+                            .attr('data-uid',item.id)
                             //.attr('contenteditable','false')
-                            .append('@' + item.user.name);
+                            .append('@' + item.name);
         }
     };
 
@@ -35,15 +31,9 @@
                	autocomplete: autocomplete,
                 callbacks: {
                     change: function(value, event) {
-                        $scope.comment.disabled = false;
-                        $scope.element.dirty = true;
-                    },
-                    keydown: function(e) {
-                        if(e.keyCode==13 && e.ctrlKey) {
-                            e.preventDefault();
-                            $scope.elementAuditAdd();
-                        }
+
                     }
+
                 }};
 
     $scope.submit = function() {
