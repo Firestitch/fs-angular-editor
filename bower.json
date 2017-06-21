@@ -2,8 +2,8 @@
     "name": "fs-angular-editor",
     "description": "",
     "main": [
-    	"dist/vendors/redactor/redactor.css"
-    	"dist/vendors/redactor/redactor.js"
+    	"dist/vendors/redactor/redactor.css",
+    	"dist/vendors/redactor/redactor.js",
         "dist/editor.js",
         "dist/editor.css"
     ],
