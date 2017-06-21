@@ -1,3 +1,4 @@
+
 (function () {
     'use strict';
 
@@ -114,3 +115,12 @@
         };
     });
 })();
+
+angular.module('fs-angular-editor').run(['$templateCache', function($templateCache) {
+  'use strict';
+
+  $templateCache.put('views/directives/editor.html',
+    "fs-angular template"
+  );
+
+}]);

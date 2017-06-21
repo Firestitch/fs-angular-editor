@@ -7,6 +7,7 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="scripts/vendors/redactor/redactor.css">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
@@ -19,19 +20,18 @@
     <!-- endbuild -->
     <link rel="stylesheet" href="styles/directives/editor.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Roboto" rel="stylesheet">
-  </head>
-  <body class="ng-cloak">
+</head>
+<body class="ng-cloak">
 
     <!-- View Container for "normal" pages -->
-    <md-content layout="row" layout-align="center center">
-        <div flex="50">
-            <h1 ng-cloak>Demo {{app_name}}</h1>
-            <div ui-view></div>
-        </div>
-    </md-content>
+    <div class="body-container">
+	    <h1 ng-cloak>Package {{app_name}}</h1>
+	    <div ui-view></div>
+	</div>
 
     <!-- build:js({.,app}) scripts/vendor.js -->
     <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-animate/angular-animate.js"></script>
     <script src="bower_components/angular-aria/angular-aria.js"></script>
@@ -46,6 +46,14 @@
     <script src="config/config.js"></script>
     <script src="scripts/app.js"></script>
 
+    <script src="scripts/vendors/redactor/redactor.js"></script>
+    <script src="scripts/vendors/redactor/plugins/table.js"></script>
+    <script src="scripts/vendors/redactor/plugins/alignment.js"></script>
+    <script src="scripts/vendors/redactor/plugins/fontcolor.js"></script>
+    <script src="scripts/vendors/redactor/plugins/iconic.js"></script>
+    <script src="scripts/vendors/redactor/plugins/save.js"></script>
+    <script src="scripts/vendors/redactor/plugins/source.js"></script>
+    <script src="scripts/vendors/redactor/plugins/autocomplete.js"></script>
 
     <script src="scripts/filters/filter.js"></script>
 
