@@ -10,8 +10,7 @@
             scope: {
                	model: "=fsModel",
 	            options: '=?fsOptions',
-	            instance: '=?fsInstance',
-	            meta: '=?fsMeta'
+	            data: '=?fsData'
             },
             link: function($scope, element, attrs) {
 
@@ -22,11 +21,9 @@
             	},
             	fixedToolbarInterval;
 
-            	if($scope.instance) {
-            		angular.extend($scope.instance,instance);
-            	}
-
             	$scope.options = $scope.options || {};
+            	$scope.instance	= instance;
+            	$scope.options.data = $scope.data;
 
                 var options = angular.extend({},fsEditor.options(),$scope.options,{
                 	callbacks: {
@@ -38,8 +35,7 @@
 					            if($scope.options.callbacks.change) {
 				                    $scope.options.callbacks.change($scope.model,
 				                    	{   options: $scope.options,
-				                            element: element,
-				                            meta: $scope.meta });
+				                            element: instance.element });
 					        	}
 			            	});
 			            },

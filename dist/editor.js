@@ -11,8 +11,7 @@
             scope: {
                	model: "=fsModel",
 	            options: '=?fsOptions',
-	            instance: '=?fsInstance',
-	            meta: '=?fsMeta'
+	            data: '=?fsData'
             },
             link: function($scope, element, attrs) {
 
@@ -23,11 +22,9 @@
             	},
             	fixedToolbarInterval;
 
-            	if($scope.instance) {
-            		angular.extend($scope.instance,instance);
-            	}
-
             	$scope.options = $scope.options || {};
+            	$scope.instance	= instance;
+            	$scope.options.data = $scope.data;
 
                 var options = angular.extend({},fsEditor.options(),$scope.options,{
                 	callbacks: {
@@ -39,8 +36,7 @@
 					            if($scope.options.callbacks.change) {
 				                    $scope.options.callbacks.change($scope.model,
 				                    	{   options: $scope.options,
-				                            element: element,
-				                            meta: $scope.meta });
+				                            element: instance.element });
 					        	}
 			            	});
 			            },
@@ -84,17 +80,19 @@
 
                 if(instance.editor.opts.toolbarFixedTarget !== document) {
 
-            		var $el = $(instance.editor.opts.toolbarFixedTarget);
-            		if($el.length) {
+                	setTimeout(function() {
+                		var $el = $(instance.editor.opts.toolbarFixedTarget);
+	            		if($el.length) {
 
-                		var fixedToolbar = angular.bind(instance.editor,function() {
-                			instance.editor.toolbar.toolbarOffsetTop = instance.editor.core.box().offset().top - $el.offset().top + $el.scrollTop();
-                		});
+	                		var fixedToolbar = angular.bind(instance.editor,function() {
+	                			instance.editor.toolbar.toolbarOffsetTop = instance.editor.core.box().offset().top - $el.offset().top + $el.scrollTop();
+	                		});
 
-                		fixedToolbar();
-                		instance.editor.toolbar.setFixed();
-                		fixedToolbarInterval = setInterval(fixedToolbar,1000);
-                	}
+	                		fixedToolbar();
+	                		instance.editor.toolbar.setFixed();
+	                		fixedToolbarInterval = setInterval(fixedToolbar,1000);
+	                	}
+               		});
                 }
             }
         };
@@ -136,12 +134,10 @@
 
             function trigger(type,data) {
             	angular.forEach(self.events,function(event) {
-            		debugger
             		if(event.type==type) {
             			event.func.apply(this,data);
             		}
             	});
-            	debugger;
             }
         };
     });

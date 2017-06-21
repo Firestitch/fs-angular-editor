@@ -33,12 +33,10 @@
 
             function trigger(type,data) {
             	angular.forEach(self.events,function(event) {
-            		debugger
             		if(event.type==type) {
             			event.func.apply(this,data);
             		}
             	});
-            	debugger;
             }
         };
     });
