@@ -63,7 +63,7 @@
 
                 $scope.$watch('model',function(value,ovalue) {
                 	if(value!=instance.content) {
-                		instance.editor.code.set(value);
+                		instance.editor.code.set(value,{ start: true });
                 	}
                 });
 
