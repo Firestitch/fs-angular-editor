@@ -80,19 +80,17 @@
 
                 if(instance.editor.opts.toolbarFixedTarget !== document) {
 
-                	setTimeout(function() {
-                		var $el = $(instance.editor.opts.toolbarFixedTarget);
-	            		if($el.length) {
+            		var $el = $(instance.editor.opts.toolbarFixedTarget);
+            		if($el.length) {
 
-	                		var fixedToolbar = angular.bind(instance.editor,function() {
-	                			instance.editor.toolbar.toolbarOffsetTop = instance.editor.core.box().offset().top - $el.offset().top + $el.scrollTop();
-	                		});
+                		var fixedToolbar = angular.bind(instance.editor,function() {
+                			instance.editor.toolbar.toolbarOffsetTop = instance.editor.core.box().offset().top - $el.offset().top + $el.scrollTop();
+                		});
 
-	                		fixedToolbar();
-	                		instance.editor.toolbar.setFixed();
-	                		fixedToolbarInterval = setInterval(fixedToolbar,1000);
-	                	}
-               		});
+                		fixedToolbar();
+                		instance.editor.toolbar.setFixed();
+                		fixedToolbarInterval = setInterval(fixedToolbar,1000);
+                	}
                 }
             }
         };

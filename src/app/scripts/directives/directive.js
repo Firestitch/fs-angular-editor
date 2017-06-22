@@ -22,7 +22,7 @@
             	fixedToolbarInterval;
 
             	$scope.options = $scope.options || {};
-            	$scope.instance	= instance;
+            	$scope.options.instance = instance;
             	$scope.options.data = $scope.data;
 
                 var options = angular.extend({},fsEditor.options(),$scope.options,{
@@ -62,7 +62,7 @@
 
                 $scope.$watch('model',function(value,ovalue) {
                 	if(value!=instance.content) {
-                		instance.editor.code.set(value);
+                		instance.editor.code.set(value,{ start: true });
                 	}
                 });
 
