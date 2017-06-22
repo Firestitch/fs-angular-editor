@@ -187,8 +187,7 @@
             	var instance = {
             		element: angular.element(element[0].querySelector('textarea')),
             		editor: null
-            	},
-            	fixedToolbarInterval;
+            	};
 
             	$scope.options = $scope.options || {};
             	$scope.options.instance = instance;
@@ -230,6 +229,7 @@
 
                 fsModel.$render = function() {
                     instance.editor.code.set(fsModel.$viewValue || '',{ start: true });
+                    updateFixedToolbar();
                 }
 
 	            $scope.$on('$destroy',function() {
@@ -239,24 +239,16 @@
 		        	if($scope.options.scrollTarget) {
 		            	$($scope.options.scrollTarget).off('scroll');
 		        	}
-
-		        	clearInterval(fixedToolbarInterval);
 	            });
 
-                if(instance.editor.opts.toolbarFixedTarget !== document) {
-
-            		var $el = $(instance.editor.opts.toolbarFixedTarget);
-            		if($el.length) {
-
-                		var fixedToolbar = angular.bind(instance.editor,function() {
-                			instance.editor.toolbar.toolbarOffsetTop = instance.editor.core.box().offset().top - $el.offset().top + $el.scrollTop();
-                		});
-
-                		fixedToolbar();
-                		instance.editor.toolbar.setFixed();
-                		fixedToolbarInterval = setInterval(fixedToolbar,1000);
-                	}
-                }
+	            function updateFixedToolbar() {
+              	  if(instance.editor.opts.toolbarFixedTarget !== document) {
+	            		var $el = $(instance.editor.opts.toolbarFixedTarget);
+	            		if($el.length) {
+	                		instance.editor.toolbar.setFixed();
+	                	}
+	                }
+	            }
             }
         };
     });
