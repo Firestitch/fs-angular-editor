@@ -4,7 +4,7 @@
 angular.module('app')
   .controller('DemoCtrl', function ($scope, $q) {
 
-
+  	$scope.content = 'ssssssssssss';
     var autocomplete =
     {
         data: function(query) {

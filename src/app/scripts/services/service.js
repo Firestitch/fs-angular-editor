@@ -3,6 +3,7 @@
     'use strict';
 
     angular.module('fs-angular-editor')
+
     .provider('fsEditor', function() {
         var self = { 	options: null,
         				events: [] };
