@@ -9,7 +9,17 @@ angular
 ])
 .config(function ($stateProvider, $urlRouterProvider, $locationProvider, fsEditorProvider) {
 
-	fsEditorProvider.options({ imageUpload: '/images' });
+	fsEditorProvider.options(
+	{
+		imageUpload: '/images',
+		callbacks: {
+			imageUpload: function(img,response) {
+		    	angular.element(img).attr('src',response.data.url);
+		        img.replaceWith(angular.element('<p>').append(img.clone()));
+		    }
+		}
+	});
+
     $locationProvider.html5Mode(true);
 
     $urlRouterProvider

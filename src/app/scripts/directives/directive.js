@@ -193,7 +193,37 @@
             	$scope.options.instance = instance;
             	$scope.options.data = $scope.data;
 
-                var options = angular.extend({},fsEditor.options(),$scope.options,{
+            	var defaults = {
+            		//formatting: ['p', 'h1', 'h2', 'h3', 'blockquote', 'pre'],
+
+            		formatting: [],
+
+			        formattingAdd: {
+			            'normal': {
+			                title: 'Normal',
+			                args: ['p']
+			            },
+			            'h1': {
+			                title: 'Heading 1',
+			                args: ['h1']
+			            },
+			            'h2': {
+			                title: 'Heading 2',
+			                args: ['h2']
+			            },
+			            'h3': {
+			                title: 'Heading 3',
+			                args: ['h3']
+			            },
+			            'code': {
+			                title: 'Code Block',
+			                args: ['pre']
+			            }
+			        },
+            		toolbarOverflow: true
+            	};
+
+                var options = angular.merge({},defaults,fsEditor.options(),$scope.options,{
                 	callbacks: {
 	                    change: function() {
 			            	$scope.$apply(function() {
@@ -206,13 +236,8 @@
 				                            element: instance.element });
 					        	}
 			            	});
-			            },
-	                    imageUpload: function(img,response) {
-	                        angular.element(img).attr('src',response.data.url);
-	                        img.replaceWith(angular.element('<p>').append(img.clone()));
-	                    }
-	                },
-	                toolbarOverflow: true
+			            }
+	                }
 	            });
 
                 try {
