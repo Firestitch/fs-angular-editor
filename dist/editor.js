@@ -195,10 +195,7 @@
             	$scope.options.data = $scope.data;
 
             	var defaults = {
-            		//formatting: ['p', 'h1', 'h2', 'h3', 'blockquote', 'pre'],
-
             		formatting: [],
-
 			        formattingAdd: {
 			            'normal': {
 			                title: 'Normal',
