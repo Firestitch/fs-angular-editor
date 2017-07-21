@@ -175,7 +175,7 @@
     angular.module('fs-angular-editor',['fs-angular-model'])
     .directive('fsEditor', function(fsEditor) {
         return {
-            template: '<textarea ng-model="model"></textarea>',
+            template: '<div ng-model="model" class="fs-angular-model"></div>',
             restrict: 'E',
             transclude: true,
             require: '^fsModel',
@@ -186,7 +186,7 @@
             link: function($scope, element, attrs, fsModel) {
 
             	var instance = {
-            		element: angular.element(element[0].querySelector('textarea')),
+            		element: angular.element(element[0].querySelector('.fs-angular-model')),
             		editor: null
             	};
 
@@ -251,8 +251,21 @@
                 },instance.editor.upload.send);
 
                 fsModel.$render = function() {
-                    instance.editor.code.set(fsModel.$viewValue || '',{ start: true });
-                    updateFixedToolbar();
+                	/*
+                	HACK: TO compinstate for the redactor 10m timeout that is messing around with this.start boolean
+					if (this.opts.type === 'textarea')
+					{
+						setTimeout($.proxy(function()
+						{
+							this.code.startSync(html);
+
+						}, this), 10);
+					}
+					*/
+                    setTimeout(function() {
+                    	instance.editor.code.set(fsModel.$viewValue || '',{ start: true });
+                    	updateFixedToolbar();
+                    },15);
                 }
 
 	            $scope.$on('$destroy',function() {
