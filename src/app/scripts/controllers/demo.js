@@ -4,7 +4,7 @@
 angular.module('app')
   .controller('DemoCtrl', function ($scope, $q) {
 
-  	$scope.content = 'ssssssssssss';
+  	$scope.content = 'ssssssssssss<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd<br>asdasda sd asd';
     var autocomplete =
     {
         data: function(query) {
@@ -27,7 +27,8 @@
              {  buttons: ['format', 'bold', 'italic', 'deleted', 'lists'],
                 plugins: ['save','alignment', 'bufferbuttons', 'table', 'source', 'fontcolor', 'iconic', 'autocomplete'],
                 linkify: false,
-                scrollTarget: '#element-drawer .pane-main .fs-drawer-wrap',
+                toolbarFixed: true,
+            	toolbarFixedTarget: '.scroll',
                	autocomplete: autocomplete,
                 callbacks: {
                     change: function(value, event) {

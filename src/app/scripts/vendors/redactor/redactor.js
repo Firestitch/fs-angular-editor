@@ -10328,10 +10328,12 @@
 					var scrollTop = $(this.opts.toolbarFixedTarget).scrollTop();
 					var boxTop = this.toolbar.getBoxTop();
 
+                    /*
+                    Removed to ensure the toolbar always goes back to the top:0
                     if (scrollTop === boxTop)
                     {
                         return;
-                    }
+                    }*/
 
 					if ((scrollTop + this.opts.toolbarFixedTopOffset + tolerance) > boxTop)
 					{

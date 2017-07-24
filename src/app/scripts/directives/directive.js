@@ -174,7 +174,7 @@
     angular.module('fs-angular-editor',['fs-angular-model'])
     .directive('fsEditor', function(fsEditor) {
         return {
-            template: '<div ng-model="model" class="fs-angular-model"></div>',
+            template: '<textarea ng-model="model" class="fs-angular-model">',
             restrict: 'E',
             transclude: true,
             require: '^fsModel',
