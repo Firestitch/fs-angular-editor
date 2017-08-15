@@ -3,15 +3,14 @@
     "description": "",
     "main": [
     	"dist/vendors/redactor/redactor.css",
+    	"dist/vendors/redactor/redactor.js",
     	"dist/vendors/redactor/plugins/fontcolor.js",
     	"dist/vendors/redactor/plugins/iconic.js",
-    	"dist/vendors/redactor/plugins/save.js",
     	"dist/vendors/redactor/plugins/source.js",
     	"dist/vendors/redactor/plugins/table.js",
     	"dist/vendors/redactor/plugins/alignment.js",
-    	"dist/vendors/redactor/redactor.js",
-        "dist/editor.js",
-        "dist/editor.css"
+    	"dist/editor.css",
+        "dist/editor.js"
     ],
     "dependencies": {
         "jquery": "^2.0.0"
