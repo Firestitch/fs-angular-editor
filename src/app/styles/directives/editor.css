@@ -24,6 +24,10 @@
     white-space: nowrap;
 }
 
+.redactor-dropdown {
+	font-family: inherit;
+}
+
 .redactor-toolbar {
     box-shadow: none;
     border: 1px solid #eee;
@@ -56,21 +60,6 @@
 .redactor-styles .text-right {
 	text-align: right;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .editor-autocomplete {
     position: relative;
@@ -160,4 +149,12 @@ inline-task {
 
 inline-user {
     font-style: italic;
+}
+
+.redactor-styles {
+	font-family: inherit;
+}
+
+.redactor-toolbar.redactor-toolbar-overflow {
+    overflow-y: hidden;
 }

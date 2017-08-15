@@ -140,6 +140,22 @@
 
 // =Toolbar
 // ------------------------------------------------------------------
+.redactor-toolbar-box {
+    position: relative;
+
+	& .re-button-tooltip {
+    	display: none;
+    	position: absolute;
+    	white-space: nowrap;
+    	z-index: 101;
+        background: rgba(0, 0, 0, .9);
+        border-radius: 2px;
+        padding: 3px 8px;
+        color: rgba(255, 255, 255, .8);
+        font-size: 12px;
+        font-family: $monospace-font-family;
+	}
+}
 .redactor-toolbar {
 
 	@include clearfix;
@@ -184,7 +200,7 @@
 	background: #000;
 }
 .redactor-toolbar.redactor-toolbar-external {
-	z-index: 999;
+	z-index: 100;
     border: 1px solid rgba(0, 0, 0, .1);
     box-shadow: none;
 }
@@ -273,19 +289,6 @@
 	&.re-button-icon {
     	padding: 16px;
     	font-size: 16px;
-	}
-	& .re-button-tooltip {
-    	display: none;
-    	position: absolute;
-    	white-space: nowrap;
-    	left: 50%;
-        bottom: -18px;
-        background: rgba(0, 0, 0, .9);
-        border-radius: 2px;
-        padding: 3px 8px;
-        color: rgba(255, 255, 255, .8);
-        font-size: 12px;
-        font-family: $monospace-font-family;
 	}
 }
 .redactor-toolbar li a {
