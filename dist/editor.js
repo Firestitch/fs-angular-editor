@@ -79,7 +79,7 @@
                 	send(formData,e);
                 },instance.editor.upload.send);
 
-                fsModel.render = function() {
+                fsModel.watch = function() {
                 	/*
                 	HACK: TO compinstate for the redactor 10m timeout that is messing around with this.start boolean
 					if (this.opts.type === 'textarea')
