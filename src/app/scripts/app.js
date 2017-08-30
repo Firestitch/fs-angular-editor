@@ -5,7 +5,8 @@ angular
     'config',
     'ui.router',
     'ngMaterial',
-    'fs-angular-editor'
+    'fs-angular-editor',
+    'fs-angular-drawer'
 ])
 .config(function ($stateProvider, $urlRouterProvider, $locationProvider, fsEditorProvider) {
 

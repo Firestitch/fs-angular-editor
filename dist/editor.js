@@ -50,20 +50,26 @@
             		toolbarOverflow: true
             	};
 
+
+            	function callback(type,html) {
+	            	$scope.$apply(function() {
+	            		fsModel.value(html);
+	            		fsModel.commit();
+
+			            var cb = $scope.options.callbacks[type];
+			            if(cb) {
+		                    cb(instance.editor.code.get(),
+		                    	{   options: $scope.options,
+		                            element: instance.element
+		                        });
+			        	}
+	            	});
+            	}
+
                 var options = angular.merge({},defaults,fsEditor.options(),$scope.options,{
                 	callbacks: {
-	                    change: function() {
-			            	$scope.$apply(function() {
-			            		fsModel.value(instance.editor.code.get());
-			            		fsModel.commit();
-
-					            if($scope.options.callbacks.change) {
-				                    $scope.options.callbacks.change(instance.editor.code.get(),
-				                    	{   options: $scope.options,
-				                            element: instance.element });
-					        	}
-			            	});
-			            }
+	                    change: angular.bind(this,callback,'change'),
+	                    paste: angular.bind(this,callback,'paste')
 	                }
 	            });
 
