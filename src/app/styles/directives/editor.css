@@ -80,6 +80,7 @@
 .editor-autocomplete .results {
     background: #fff;
     min-width: 200px;
+    max-width: 450px;
     display: table;
     left: 0;
     margin-top: 3px;
@@ -95,10 +96,6 @@
     border-color: transparent;
     padding: 0;
     min-width: 300px;
-}
-
-.editor-autocomplete input:placeholder-shown {
-	color: #efefef;
 }
 
 .editor-autocomplete input:focus {
