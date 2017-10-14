@@ -21,6 +21,10 @@
         					{ template: 'Long John Silver Silver Silver Silver Silver', data: { id: 2, name: 'Long Silver' }} ]);
         	});
         },
+        button: {
+        	tooltip: 'Insert autocomplete',
+        	icon: 'share'
+        },
         insert: function(item) {
             return angular.element('<inline-user>')
                             .attr('data-uid',item.id)

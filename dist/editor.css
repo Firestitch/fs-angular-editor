@@ -92,16 +92,13 @@
 }
 
 .editor-autocomplete input {
-    border: 0px;
+    border-color: transparent;
     padding: 0;
-    min-width: 250px;
-    width: 0;
-	padding-left: 4px;
+    min-width: 300px;
 }
 
 .editor-autocomplete input:placeholder-shown {
 	color: #efefef;
-	font-size: 13px;
 }
 
 .editor-autocomplete input:focus {
@@ -130,25 +127,6 @@
     opacity: 0;
     position: absolute;
     top: 0;
-}
-
-inline-user,
-inline-task,
-inline-page,
-inline-spec {
-  -moz-user-modify: read-only;
-  -webkit-user-modify: read-only;
-  color: #999;
-}
-
-inline-spec,
-inline-page,
-inline-task {
-  cursor: pointer;
-}
-
-inline-user {
-    font-style: italic;
 }
 
 .redactor-styles {

@@ -130,119 +130,132 @@ $.Redactor.prototype.autocomplete = function()
 			};
 		},
         init: function() {
+        	self = this.autocomplete;
 
-            self = this.autocomplete;
+        	var options = this.opts.autocomplete;
 
-            var options = this.opts.autocomplete;
+        	if(options.button) {
+	        	options.button.name = options.button.name || 'autocomplete-open'
+	        	var button = this.button.add(options.button.name,options.button.tooltip);
 
-            this.$editor.on('keydown.redactor-plugin-autocomplete', $.proxy(function(e) {
+	        	if(options.button.icon) {
+	        		this.button.setIcon(button, '<md-icon class="material-icons">' + options.button.icon + '</md-icon>');
+	        	}
+
+	            this.button.addCallback(button,function() {
+	            	setTimeout(function() {
+	            		self.open();
+	            	});
+	            });
+	        }
+
+            this.$editor.on('keyup.redactor-plugin-autocomplete', $.proxy(function(e) {
 
                 var current = this.selection.current();
-
                 if(current) {
-
-					var range = this.selection.range(this.selection.get());
-
-
                     if(e.keyCode==32 && e.ctrlKey) { //space + Ctrl
-
-                        var sel = this.selection.get();
-                        //sel.baseNode.nextSibling.nodeValue = sel.baseNode.nextSibling.nodeValue.replace(/^\s/,'');
-                        this.selection.save();
-
-                        var keydownDebounce = self.debounce(function(e,value) {
-                        	self.inputSearch(value);
-		                    self.inputWidth(String.fromCharCode(e.keyCode));
-		                },300);
-
-                        var input = angular.element('<input/>')
-                        				.attr('placeholder',this.opts.autocomplete.placeholder)
-                                        .on('blur',function(e) {
-                                            setTimeout(function() {
-                                                if(!self.preventBlur) {
-                                                   	self.remove();
-                                                }
-                                            },200);
-                                        })
-                                        .on('keyup',$.proxy(function(e) {
-                                            e.stopPropagation();
-                                        },this))
-                                        .on('keydown',function(e) {
-
-                                        	var immediate = e.keyCode==8 || e.keyCode==38 || e.keyCode==40;
-
-									        self.preventBlur = false;
-
-									        var value = self.input.val();
-
-									        if(e.keyCode==8) //backspace
-									            value = value.slice(0,-1);
-									        else
-									        	value += e.key;
-
-									        if(e.keyCode==38 || e.keyCode==40) { //up,down
-
-									            var selected = angular.element(self.results[0].querySelector('.result.selected'));
-
-									            if(selected.length) {
-
-									                if(e.keyCode==38) {
-									                    if(selected[0].previousSibling) {
-									                        self.itemSetSelected(selected[0].previousSibling);
-									                    }
-									                } else if(e.keyCode==40) {
-									                    if(selected[0].nextSibling) {
-									                        self.itemSetSelected(selected[0].nextSibling);
-									                    }
-									                }
-									            }
-
-									            e.preventDefault();
-
-									        } else if((!self.input.val().length && e.keyCode==8) || e.keyCode==27) { //backspace, escape
-									            self.remove();
-									            e.preventDefault();
-
-									        } else {
-
-									            if(e.keyCode==13 || e.keyCode==9) { //enter, tab
-									                self.itemSelect();
-									                e.preventDefault();
-
-									            } else {
-									            	keydownDebounce(e,value);
-									            }
-
-									        }
-									        e.stopPropagation();
-                                        });
-
-                        var autoWidth = angular.element('<span>').addClass('autocomplete-width');
-                        var results = angular.element('<span class="results"></span>');
-                        var elw = angular.element('<div>')
-                                        .addClass('editor-autocomplete-wrap')
-                                        .append('<span class="bumper"></span>')
-                                        .append(angular.element('<span class="input"></span>')
-                                                    .append(input))
-                                        .append(results)
-                                        .append(autoWidth);
-
-                        var container = angular.element('<div>')
-                                                    .addClass('editor-autocomplete')
-                                                    .append(elw);
-
-                        self.insertTextAtCursor(container[0]);
-                        self.container = container;
-                        self.results = results;
-                        self.autoWidth = autoWidth;
-                        self.input = input;
-
-                        input[0].focus();
-                       	self.inputSearch('');
+                    	e.preventDefault();
+                    	this.autocomplete.open();
                     }
                 }
 
             },this));
+        },
+
+        open: function() {
+
+			var sel = this.selection.get();
+			this.selection.save();
+
+			var keydownDebounce = self.debounce(function(e,value) {
+				self.inputSearch(value);
+			    self.inputWidth(String.fromCharCode(e.keyCode));
+			},300);
+
+			var input = angular.element('<input/>')
+			.attr('placeholder',this.opts.autocomplete.placeholder)
+            .on('blur',function(e) {
+                setTimeout(function() {
+                    if(!self.preventBlur) {
+                       	self.remove();
+                    }
+                },200);
+            })
+            .on('keyup',$.proxy(function(e) {
+                e.stopPropagation();
+            },this))
+            .on('keydown',function(e) {
+
+            	var immediate = e.keyCode==8 || e.keyCode==38 || e.keyCode==40;
+
+		        self.preventBlur = false;
+
+		        var value = self.input.val();
+
+		        if(e.keyCode==8) //backspace
+		            value = value.slice(0,-1);
+		        else
+		        	value += e.key;
+
+		        if(e.keyCode==38 || e.keyCode==40) { //up,down
+
+		            var selected = angular.element(self.results[0].querySelector('.result.selected'));
+
+		            if(selected.length) {
+
+		                if(e.keyCode==38) {
+		                    if(selected[0].previousSibling) {
+		                        self.itemSetSelected(selected[0].previousSibling);
+		                    }
+		                } else if(e.keyCode==40) {
+		                    if(selected[0].nextSibling) {
+		                        self.itemSetSelected(selected[0].nextSibling);
+		                    }
+		                }
+		            }
+
+		            e.preventDefault();
+
+		        } else if((!self.input.val().length && e.keyCode==8) || e.keyCode==27) { //backspace, escape
+		            self.remove();
+		            e.preventDefault();
+
+		        } else {
+
+		            if(e.keyCode==13 || e.keyCode==9) { //enter, tab
+		                self.itemSelect();
+		                e.preventDefault();
+
+		            } else {
+		            	keydownDebounce(e,value);
+		            }
+
+		        }
+		        e.stopPropagation();
+            });
+
+			var autoWidth = angular.element('<span>').addClass('autocomplete-width');
+			var results = angular.element('<span class="results"></span>');
+			var elw = angular.element('<div>')
+			                .addClass('editor-autocomplete-wrap')
+			                .append('<span class="bumper"></span>')
+			                .append(angular.element('<span class="input"></span>')
+			                            .append(input))
+			                .append(results)
+			                .append(autoWidth);
+
+			var container = angular.element('<div>')
+			                            .addClass('editor-autocomplete')
+			                            .append(elw);
+
+			self.insertTextAtCursor(container[0]);
+			self.container = container;
+			self.results = results;
+			self.autoWidth = autoWidth;
+			self.input = input;
+
+			input[0].focus();
+			self.inputSearch('');
         }
     };
 };
