@@ -6,9 +6,12 @@ angular
     'ui.router',
     'ngMaterial',
     'fs-angular-editor',
-    'fs-angular-drawer'
+    'fs-angular-drawer',
+    'fs-angular-theme'
 ])
-.config(function ($stateProvider, $urlRouterProvider, $locationProvider, fsEditorProvider) {
+.config(function ($stateProvider, $urlRouterProvider, $locationProvider, fsEditorProvider, fsThemeProvider) {
+
+	fsThemeProvider.options({ primary: '4678AE', accent: '4678AE' });
 
 	fsEditorProvider.options(
 	{

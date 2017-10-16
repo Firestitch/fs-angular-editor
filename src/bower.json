@@ -12,8 +12,10 @@
         "angular-material": "1.1.1",
         "angular-ui-router": "0.3.2",
         "fs-boilerplate-styles": "^1.0.0",
-        "fs-angular-model": "^1.0.0",
-        "fs-angular-drawer": "^1.0.0"
+        "fs-angular-model": ">=1.0.0",
+        "fs-angular-util": ">=1.0.0",
+        "fs-angular-drawer": ">=1.0.0",
+        "fs-angular-theme": ">=1.0.0"
     },
     "resolutions": {
         "angular": "1.6.3"

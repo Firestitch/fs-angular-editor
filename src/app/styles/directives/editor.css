@@ -133,3 +133,51 @@
 .redactor-toolbar.redactor-toolbar-overflow {
     overflow-y: hidden;
 }
+
+
+.fs-editor, .fs-editor-content {
+	outline: none;
+}
+
+.fs-editor-content {
+    border-color: transparent;
+    border-style: dashed;
+    border-width: 1px;
+	cursor: pointer;
+	padding: 5px;
+	margin: -5px;
+	position: relative;
+	min-height: 40px;
+}
+
+.fs-editor-content:hover {
+	border-color: inherit;
+	border-radius: 3px;
+}
+
+.fs-editor-edit {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 0px;
+    height: 0px;
+    border-right-width: 50px;
+    border-bottom-width: 50px;
+    border-style: solid;
+    border-bottom-color: transparent !important;
+    border-left-width: 0;
+    border-top-width: 0;
+}
+
+.fs-editor-edit-icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.fs-editor-edit-icon md-icon {
+	color: #fff;
+	transform: scale(.85);
+}
+
+
