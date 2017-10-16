@@ -50,6 +50,9 @@
 
                 }};
 
+	$scope.destroy = function() {
+        $scope.redactorOptions.instance.destroy();
+    }
 
     $scope.submit = function() {
         alert('submit');

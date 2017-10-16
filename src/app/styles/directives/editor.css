@@ -161,23 +161,30 @@
     top: 0;
     width: 0px;
     height: 0px;
-    border-right-width: 50px;
-    border-bottom-width: 50px;
+    border-right-width: 40px;
+    border-bottom-width: 40px;
     border-style: solid;
-    border-bottom-color: transparent !important;
+    border-right-color: #e0e0e0;
     border-left-width: 0;
     border-top-width: 0;
+    border-bottom-color: transparent;
+}
+
+.fs-editor-content:hover .fs-editor-edit {
+	border-right-color: inherit;
 }
 
 .fs-editor-edit-icon {
     position: absolute;
     right: 0;
-    top: 0;
+    top: -2px;
 }
 
 .fs-editor-edit-icon md-icon {
 	color: #fff;
-	transform: scale(.85);
+	transform: scale(.65);
 }
 
-
+.fs-angular-model {
+	display: none !important;
+}

@@ -16,10 +16,10 @@
         return {
             template: ' <div class="fs-editor" ng-click="init()" ng-style="themeStyles">\
             				<div class="fs-editor-content redactor-styles" ng-if="options.clickToEdit && !inited">\
-            					<div class="fs-editor-edit" ng-style="themeStyles"></div><div class="fs-editor-edit-icon"><md-icon>edit</md-icon></div>\
+            					<div class="fs-editor-edit"></div><div class="fs-editor-edit-icon"><md-icon>edit</md-icon></div>\
             					<div ng-bind-html="model|fsEditorTrustHtml"></div>\
             				</div>\
-            				<textarea ng-model="model" class="fs-angular-model" style="display:none">\
+            				<textarea ng-model="model" class="fs-angular-model">\
             			</div>',
             restrict: 'E',
             transclude: true,
@@ -33,7 +33,8 @@
 
             	var instance = {
             		element: angular.element(element[0].querySelector('.fs-angular-model')),
-            		editor: null
+            		editor: null,
+            		destroy: destroy
             	};
 
             	$scope.options = $scope.options || {};
@@ -80,11 +81,8 @@
             			angular.bind(this,$scope.options.callbacks.clicktoedit)();
             		}
 
+            		destroy();
             		$scope.inited = true;
-
-	                try {
-	                    instance.element.redactor('core.destroy');
-	                } catch(e) {}
 
 	                var options = angular.merge({},defaults,fsEditor.options(),$scope.options,{
 	                	callbacks: {
@@ -101,6 +99,13 @@
 	                	fsEditor.trigger('uploadBeforeSend',[formData, e]);
 	                	send(formData,e);
 	                },instance.editor.upload.send);
+	            }
+
+	            function destroy() {
+	            	$scope.inited = false;
+	                try {
+	                    instance.element.redactor('core.destroy');
+	                } catch(e) {}
 	            }
 
                 fsModel.watch = function() {
