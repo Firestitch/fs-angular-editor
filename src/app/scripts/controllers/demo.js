@@ -45,7 +45,7 @@
 
                     },
                     clicktoedit: function() {
-                    	alert("clicktoedit");
+                    	//alert("clicktoedit");
                     }
 
                 }};

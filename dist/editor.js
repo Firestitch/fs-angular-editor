@@ -34,7 +34,8 @@
             	var instance = {
             		element: angular.element(element[0].querySelector('.fs-angular-model')),
             		editor: null,
-            		destroy: destroy
+            		destroy: destroy,
+            		init: init
             	};
 
             	$scope.options = $scope.options || {};
@@ -77,13 +78,6 @@
             			return;
             		}
 
-            		if($scope.options.clickToEdit && $scope.options.callbacks.clicktoedit) {
-            			angular.bind(this,$scope.options.callbacks.clicktoedit)();
-            		}
-
-            		destroy();
-            		$scope.inited = true;
-
 	                var options = angular.merge({},defaults,fsEditor.options(),$scope.options,{
 	                	callbacks: {
 		                    change: angular.bind(this,callback,'change'),
@@ -91,6 +85,13 @@
 		                },
 		                clickToEdit: false
 		            });
+
+            		destroy();
+            		$scope.inited = true;
+
+            		if($scope.options.clickToEdit && $scope.options.callbacks.clicktoedit) {
+            			angular.bind(this,$scope.options.callbacks.clicktoedit)();
+            		}
 
 	                instance.element.redactor(options);
 	                instance.editor = instance.element.redactor('core.object');
@@ -102,10 +103,18 @@
 	            }
 
 	            function destroy() {
-	            	$scope.inited = false;
-	                try {
-	                    instance.element.redactor('core.destroy');
-	                } catch(e) {}
+
+	                element.off('remove');
+	            	if(instance.editor) {
+	            		instance.editor.core.destroy();
+	            	}
+
+		        	if($scope.options.scrollTarget) {
+		            	$($scope.options.scrollTarget).off('scroll');
+		        	}
+
+		        	$scope.inited = false;
+		        	instance.editor = null;
 	            }
 
                 fsModel.watch = function() {
@@ -156,16 +165,7 @@
 	            	init();
 	            }
 
-	            $scope.$on('$destroy',function() {
-	            	element.off('remove');
-	            	if(instance.editor) {
-	            		instance.editor.core.destroy();
-	            	}
-
-		        	if($scope.options.scrollTarget) {
-		            	$($scope.options.scrollTarget).off('scroll');
-		        	}
-	            });
+	            $scope.$on('$destroy',destroy);
             }
         };
     });

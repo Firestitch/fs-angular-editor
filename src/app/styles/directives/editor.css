@@ -147,7 +147,7 @@
 	padding: 5px;
 	margin: -5px;
 	position: relative;
-	min-height: 40px;
+	min-height: 30px;
 }
 
 .fs-editor-content:hover {
