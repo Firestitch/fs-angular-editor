@@ -43,6 +43,9 @@
                 callbacks: {
                     change: function(value, event) {
 
+                    },
+                    clicktoedit: function() {
+                    	alert("clicktoedit");
                     }
 
                 }};

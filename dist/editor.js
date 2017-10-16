@@ -66,13 +66,18 @@
 			                args: ['pre']
 			            }
 			        },
-            		toolbarOverflow: true
+            		toolbarOverflow: true,
+            		callbacks: {}
             	};
 
             	function init() {
 
             		if($scope.inited) {
             			return;
+            		}
+
+            		if($scope.options.clickToEdit && $scope.options.callbacks.clicktoedit) {
+            			angular.bind(this,$scope.options.callbacks.clicktoedit)();
             		}
 
             		$scope.inited = true;
