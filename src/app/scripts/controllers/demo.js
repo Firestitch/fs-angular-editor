@@ -46,7 +46,10 @@
                     },
                     clicktoedit: function() {
                     	//alert("clicktoedit");
-                    }
+                    },
+                   /* sanitize: function(element) {
+                    	debugger;
+                    }*/
 
                 }};
 

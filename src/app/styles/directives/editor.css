@@ -140,19 +140,8 @@
 }
 
 .fs-editor-content {
-    border-color: transparent;
-    border-style: dashed;
-    border-width: 1px;
-	cursor: pointer;
-	padding: 5px;
-	margin: -5px;
 	position: relative;
 	min-height: 30px;
-}
-
-.fs-editor-content:hover {
-	border-color: inherit;
-	border-radius: 3px;
 }
 
 .fs-editor-edit {
@@ -168,15 +157,17 @@
     border-left-width: 0;
     border-top-width: 0;
     border-bottom-color: transparent;
+    display: block;
 }
 
-.fs-editor-content:hover .fs-editor-edit {
+.fs-editor-content .fs-editor-edit:hover {
+	cursor: pointer;
 	border-right-color: inherit;
 }
 
 .fs-editor-edit-icon {
     position: absolute;
-    right: 0;
+    left: 15px;
     top: -2px;
 }
 

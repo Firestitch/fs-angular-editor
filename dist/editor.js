@@ -12,12 +12,33 @@
 (function () {
     'use strict';
     angular.module('fs-angular-editor')
+    .directive('fsEditorContent', function(fsUtil,$sce) {
+    	return {
+    		template: '<div ng-bind-html="content"></div>',
+	    	restrict: 'E',
+	    	scope: {
+	    		model: '=fsModel',
+	    		sanitize: '&?fsSanitize'
+	    	},
+			link: function($scope, element, attrs) {
+				$scope.content = '';
+				$scope.$watch('model',function(model) {
+					if(model) {
+						$scope.content = $sce.trustAsHtml(fsUtil.string(model));
+						setTimeout(function() {
+							$scope.sanitize({ element: element });
+						});
+					}
+				});
+			}
+		}
+    })
     .directive('fsEditor', function(fsEditor, fsTheme) {
         return {
-            template: ' <div class="fs-editor" ng-click="init()" ng-style="themeStyles">\
-            				<div class="fs-editor-content redactor-styles" ng-if="options.clickToEdit && !inited">\
-            					<div class="fs-editor-edit"></div><div class="fs-editor-edit-icon"><md-icon>edit</md-icon></div>\
-            					<div ng-bind-html="model|fsEditorTrustHtml"></div>\
+            template: ' <div class="fs-editor">\
+            				<div class="fs-editor-content redactor-styles" ng-if="options.clickToEdit && !inited" ng-style="themeStyles">\
+            					<div class="fs-editor-edit"><a class="fs-editor-edit-icon" ng-click="init()"><md-icon>edit</md-icon></a></div>\
+            					<fs-editor-content fs-model="model" fs-sanitize="options.callbacks.sanitize(element)"></fs-editor-content>\
             				</div>\
             				<textarea ng-model="model" class="fs-angular-model">\
             			</div>',
