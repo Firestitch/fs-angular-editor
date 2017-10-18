@@ -132,7 +132,7 @@ $.Redactor.prototype.autocomplete = function()
         init: function() {
         	self = this.autocomplete;
 
-        	var options = this.opts.autocomplete;
+        	var options = this.opts.autocomplete || {};
 
         	if(options.button) {
 	        	options.button.name = options.button.name || 'autocomplete-open'
