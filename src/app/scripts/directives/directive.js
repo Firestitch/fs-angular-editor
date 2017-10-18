@@ -50,6 +50,7 @@
 
             	$scope.options = $scope.options || {};
             	$scope.options.instance = instance;
+            	$scope.options.callbacks = $scope.options.callbacks || {};
             	$scope.options.data = $scope.data;
             	$scope.init = init;
             	$scope.themeStyles = { 'border-color': fsTheme.primaryHex() };
