@@ -12,12 +12,10 @@
 			link: function($scope, element, attrs) {
 				$scope.content = '';
 				$scope.$watch('model',function(model) {
-					if(model) {
-						$scope.content = $sce.trustAsHtml(fsUtil.string(model));
-						setTimeout(function() {
-							$scope.sanitize({ element: element });
-						});
-					}
+					$scope.content = $sce.trustAsHtml(fsUtil.string(model));
+					setTimeout(function() {
+						$scope.sanitize({ element: element });
+					});
 				});
 			}
 		}
