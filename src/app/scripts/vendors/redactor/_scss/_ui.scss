@@ -109,6 +109,32 @@
     outline: none;
 }
 
+// =Empty
+// ------------------------------------------------------------------
+.redactor-in {
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	p,
+	blockquote {
+        &:empty {
+    		min-height: $base-line;
+		}
+	}
+	strong, b, em, i, sup, sub, u, ins {
+    	&:empty {
+            display: inline-block;
+            min-width: 1px;
+            min-height: 1rem;
+		}
+	}
+	table {
+        empty-cells: show;
+    }
+}
 
 // =Utility
 // ------------------------------------------------------------------

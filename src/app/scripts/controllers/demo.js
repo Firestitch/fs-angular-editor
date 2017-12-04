@@ -39,7 +39,7 @@
                 toolbarFixed: true,
             	toolbarFixedTarget: '.scroll',
                	autocomplete: autocomplete,
-               	clickToEdit: true,
+               	//clickToEdit: true,
                 callbacks: {
                     change: function(value, event) {
 

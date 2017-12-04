@@ -52,9 +52,6 @@
 		margin: 0;
 		padding: 0;
 		margin-bottom: 12px;
-		&:empty {
-    		min-height: $base-line;
-		}
 	}
 	h1 {
 		font-size: $font-size-h1;
@@ -95,12 +92,6 @@
 	address {
 		padding: 0;
 		margin: 0;
-	}
-	p,
-	blockquote {
-        &:empty {
-    		min-height: $base-line;
-		}
 	}
     // Top Space
     p,
@@ -220,13 +211,6 @@
 	sub {
 		bottom: -.2rem;
 	}
-	strong, b, em, i, sup, sub, u, ins {
-    	&:empty {
-            display: inline-block;
-            min-width: 1px;
-            min-height: 1rem;
-		}
-	}
 	figcaption {
 		margin: 4px 0;
 		font-size: 12px;
@@ -334,7 +318,6 @@
 		border-collapse: collapse;
 		max-width: 100%;
 		width: 100%;
-		empty-cells: show;
 
 		caption {
 			text-transform: uppercase;
